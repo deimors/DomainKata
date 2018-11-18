@@ -17,14 +17,6 @@ namespace Kata.TicTacToe.Tests
 		}
 	}
 
-	public class XMarkedEvent : GameEvent
-	{
-		public XMarkedEvent(int x, int y)
-		{
-			throw new NotImplementedException();
-		}
-	}
-
 	public abstract class GameTestFixture
 	{
 		private readonly Game _game = new Game();
@@ -40,19 +32,5 @@ namespace Kata.TicTacToe.Tests
 
 		protected void Assert_EventObserved(GameEvent gameEvent)
 			=> A.CallTo(() => _eventObserver.OnNext(gameEvent)).MustHaveHappened();
-	}
-
-	public abstract class GameEvent
-	{
-	}
-
-	public class Game
-	{
-		public IObservable<GameEvent> Events { get; }
-
-		public void MarkX(int x, int y)
-		{
-			throw new NotImplementedException();
-		}
 	}
 }
