@@ -9,11 +9,19 @@ namespace Kata.TicTacToe.Tests
 	public class GameTests : GameTestFixture
 	{
 		[Fact]
-		public void MarkFirstXInTopCorner()
+		public void MarkFirstXInTopLeftCorner()
 		{
 			Act_MarkX(0, 0);
 
 			Assert_EventObserved(new XMarkedEvent(0, 0));
+		}
+
+		[Fact]
+		public void MarkFirstXInBottomRightCorner()
+		{
+			Act_MarkX(2, 2);
+
+			Assert_EventObserved(new XMarkedEvent(2, 2));
 		}
 	}
 
