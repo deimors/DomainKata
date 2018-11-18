@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Reactive.Subjects;
+using Functional;
+using Unit = Functional.Unit;
 
 namespace Kata.TicTacToe
 {
@@ -9,9 +11,11 @@ namespace Kata.TicTacToe
 
 		public IObservable<GameEvent> Events => _events;
 
-		public void MarkX(int x, int y)
+		public Result<Unit, GameError> MarkX(int x, int y)
 		{
 			_events.OnNext(new XMarkedEvent(x, y));
+
+			return default(Result<Unit, GameError>);
 		}
 	}
 }

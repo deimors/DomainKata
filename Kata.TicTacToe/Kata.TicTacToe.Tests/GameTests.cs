@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using FakeItEasy;
+using FluentAssertions;
+using Functional;
 using Xunit;
 
 namespace Kata.TicTacToe.Tests
@@ -23,6 +25,20 @@ namespace Kata.TicTacToe.Tests
 
 			Assert_EventObserved(new XMarkedEvent(2, 2));
 		}
+
+		[Theory]
+		[InlineData(-1, 0), InlineData(3, 0), InlineData(0, -1), InlineData(0, 3)]
+		public void MarkFirstXOutsideBoard(int x, int y)
+		{
+			Act_MarkX(x, y)
+				.Assert_Failure(GameError.MarkOutsideBoard);
+		}
+	}
+
+	public static class GameTestExtensions
+	{
+		public static void Assert_Failure(this Result<Unit, GameError> result, GameError expectedError)
+			=> result.Should().BeEquivalentTo(Result.Failure<Unit, GameError>(expectedError));
 	}
 
 	public abstract class GameTestFixture
@@ -35,7 +51,7 @@ namespace Kata.TicTacToe.Tests
 			_game.Events.Subscribe(_eventObserver);
 		}
 
-		protected void Act_MarkX(int x, int y)
+		protected Result<Unit, GameError> Act_MarkX(int x, int y)
 			=> _game.MarkX(x, y);
 
 		protected void Assert_EventObserved(GameEvent gameEvent)
