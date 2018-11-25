@@ -43,6 +43,15 @@ namespace Kata.TicTacToe.Tests
 			Act_MarkO(2, 2)
 				.Assert_Success();
 		}
+
+		[Fact]
+		public void MarkXThenX()
+		{
+			Act_MarkX(0, 0);
+
+			Act_MarkX(2, 2)
+				.Assert_Failure(GameError.OutOfOrderMark);
+		}
 	}
 
 	public static class GameTestExtensions
