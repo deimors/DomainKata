@@ -1,31 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FakeItEasy;
+﻿using FakeItEasy;
 using FluentAssertions;
 using Functional;
+using System;
 using Xunit;
 
 namespace Kata.TicTacToe.Tests
 {
 	public class GameTests : GameTestFixture
 	{
-		[Fact]
-		public void MarkFirstXInTopLeftCorner()
-		{
-			Act_MarkX(0, 0);
-
-			Assert_EventObserved(new XMarkedEvent(0, 0));
-		}
-
-		[Fact]
-		public void MarkFirstXInBottomRightCorner()
-		{
-			Act_MarkX(2, 2);
-
-			Assert_EventObserved(new XMarkedEvent(2, 2));
-		}
-
 		[Theory]
 		[InlineData(-1, 0), InlineData(3, 0), InlineData(0, -1), InlineData(0, 3)]
 		public void MarkFirstXOutsideBoard(int x, int y)
@@ -42,6 +24,8 @@ namespace Kata.TicTacToe.Tests
 		{
 			Act_MarkX(x, y)
 				.Assert_Success();
+
+			Assert_EventObserved(new XMarkedEvent(x, y));
 		}
 	}
 
