@@ -13,19 +13,18 @@ namespace Kata.TicTacToe
 
 		public IObservable<GameEvent> Events => _events;
 
-		public Result<Unit, GameError> MarkX(int x, int y) 
-			=> Result
-				.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard)
-				.Bind(_ => Result.Create(_isXTurn, () => Unit.Value, () => GameError.OutOfOrderMark))
-				.Do(_ => _isXTurn = false)
-				.Do(_ => _events.OnNext(new XMarkedEvent(x, y)));
+		public Result<Unit, GameError> MarkX(int x, int y)
+			=> Mark(x, y, true, () => new XMarkedEvent(x, y));
 
-		public Result<Unit, GameError> MarkO(int x, int y) 
+		public Result<Unit, GameError> MarkO(int x, int y)
+			=> Mark(x, y, false, () => new OMarkedEvent(x, y));
+
+		private Result<Unit, GameError> Mark(int x, int y, bool isXMark, Func<GameEvent> markedEventFactory)
 			=> Result
 				.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard)
-				.Bind(_ => Result.Create(!_isXTurn, () => Unit.Value, () => GameError.OutOfOrderMark))
-				.Do(_ => _isXTurn = true)
-				.Do(_ => _events.OnNext(new OMarkedEvent(x, y)));
+				.Bind(_ => Result.Create(_isXTurn == isXMark, () => Unit.Value, () => GameError.OutOfOrderMark))
+				.Do(_ => _isXTurn = !_isXTurn)
+				.Do(_ => _events.OnNext(markedEventFactory()));
 
 		private static bool IsMarkInsideBoard(int x, int y)
 			=> x >= 0 && x <= 2 && y >= 0 && y <= 2;
