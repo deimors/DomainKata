@@ -18,5 +18,10 @@ namespace Kata.TicTacToe
 
 		private static bool IsMarkInsideBoard(int x, int y)
 			=> x >= 0 && x <= 2 && y >= 0 && y <= 2;
+
+		public Result<Unit, GameError> MarkO(int x, int y)
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

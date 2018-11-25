@@ -27,6 +27,13 @@ namespace Kata.TicTacToe.Tests
 
 			Assert_EventObserved(new XMarkedEvent(x, y));
 		}
+
+		[Fact]
+		public void MarkOFirst()
+		{
+			Act_MarkO(0, 0)
+				.Assert_Failure(GameError.OutOfOrderMark);
+		}
 	}
 
 	public static class GameTestExtensions
@@ -51,10 +58,13 @@ namespace Kata.TicTacToe.Tests
 		protected Result<Unit, GameError> Act_MarkX(int x, int y)
 			=> _game.MarkX(x, y);
 
+		protected Result<Unit, GameError> Act_MarkO(int x, int y)
+			=> _game.MarkO(x, y);
+
 		protected void Assert_EventObserved(GameEvent gameEvent)
 			=> A.CallTo(() => _eventObserver.OnNext(gameEvent)).MustHaveHappened();
 
 		protected void Assert_EventNotObserved<TEvent>() where TEvent : GameEvent
-			=> A.CallTo(() => _eventObserver.OnNext(A<GameEvent>.That.Matches(e => e is TEvent))).MustNotHaveHappened();
+			=> A.CallTo(() => _eventObserver.OnNext(A<GameEvent>.That.Matches(e => e is TEvent))).MustNotHaveHappened();	
 	}
 }

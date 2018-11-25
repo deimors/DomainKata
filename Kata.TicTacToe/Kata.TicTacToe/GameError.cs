@@ -2,6 +2,7 @@
 {
 	public enum GameError
 	{
-		MarkOutsideBoard
+		MarkOutsideBoard,
+		OutOfOrderMark
 	}
 }
