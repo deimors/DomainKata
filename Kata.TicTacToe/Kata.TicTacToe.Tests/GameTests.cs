@@ -32,6 +32,8 @@ namespace Kata.TicTacToe.Tests
 		{
 			Act_MarkX(x, y)
 				.Assert_Failure(GameError.MarkOutsideBoard);
+
+			Assert_EventNotObserved<XMarkedEvent>();
 		}
 
 		[Theory]
@@ -67,5 +69,8 @@ namespace Kata.TicTacToe.Tests
 
 		protected void Assert_EventObserved(GameEvent gameEvent)
 			=> A.CallTo(() => _eventObserver.OnNext(gameEvent)).MustHaveHappened();
+
+		protected void Assert_EventNotObserved<TEvent>() where TEvent : GameEvent
+			=> A.CallTo(() => _eventObserver.OnNext(A<GameEvent>.That.Matches(e => e is TEvent))).MustNotHaveHappened();
 	}
 }
