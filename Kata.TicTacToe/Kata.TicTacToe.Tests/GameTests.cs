@@ -33,12 +33,23 @@ namespace Kata.TicTacToe.Tests
 			Act_MarkX(x, y)
 				.Assert_Failure(GameError.MarkOutsideBoard);
 		}
+
+		[Theory]
+		[InlineData(0, 0), InlineData(1, 1), InlineData(2, 2), InlineData(0, 2), InlineData(2, 0)]
+		public void MarkFirstXInsideBoard(int x, int y)
+		{
+			Act_MarkX(x, y)
+				.Assert_Success();
+		}
 	}
 
 	public static class GameTestExtensions
 	{
 		public static void Assert_Failure(this Result<Unit, GameError> result, GameError expectedError)
 			=> result.Should().BeEquivalentTo(Result.Failure<Unit, GameError>(expectedError));
+
+		public static void Assert_Success(this Result<Unit, GameError> result)
+			=> result.Should().BeEquivalentTo(Result.Success<Unit, GameError>(Unit.Value));
 	}
 
 	public abstract class GameTestFixture
