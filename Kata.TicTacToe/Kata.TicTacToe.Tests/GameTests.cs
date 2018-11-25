@@ -35,6 +35,8 @@ namespace Kata.TicTacToe.Tests
 		{
 			Act_MarkO(0, 0)
 				.Assert_Failure(GameError.OutOfOrderMark);
+
+			Assert_EventNotObserved<OMarkedEvent>();
 		}
 
 		[Fact]
