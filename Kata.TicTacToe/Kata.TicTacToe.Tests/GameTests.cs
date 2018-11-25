@@ -2,6 +2,8 @@
 using FluentAssertions;
 using Functional;
 using System;
+using System.Linq;
+using FakeItEasy.Configuration;
 using Xunit;
 
 namespace Kata.TicTacToe.Tests
@@ -42,6 +44,11 @@ namespace Kata.TicTacToe.Tests
 
 			Act_MarkO(2, 2)
 				.Assert_Success();
+
+			Assert_EventsObservedInOrder(
+				new XMarkedEvent(0, 0),
+				new OMarkedEvent(2, 2)
+			);
 		}
 
 		[Fact]
@@ -81,6 +88,13 @@ namespace Kata.TicTacToe.Tests
 
 		protected void Assert_EventObserved(GameEvent gameEvent)
 			=> A.CallTo(() => _eventObserver.OnNext(gameEvent)).MustHaveHappened();
+
+		protected void Assert_EventsObservedInOrder(params GameEvent[] gameEvents)
+			=> gameEvents.Skip(1)
+				.Aggregate(
+					A.CallTo(() => _eventObserver.OnNext(gameEvents.First())).MustHaveHappened() as IOrderableCallAssertion,
+					(prev, nextEvent) => prev.Then(A.CallTo(() => _eventObserver.OnNext(nextEvent)).MustHaveHappened())
+				);
 
 		protected void Assert_EventNotObserved<TEvent>() where TEvent : GameEvent
 			=> A.CallTo(() => _eventObserver.OnNext(A<GameEvent>.That.Matches(e => e is TEvent))).MustNotHaveHappened();	
