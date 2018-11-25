@@ -15,7 +15,7 @@ namespace Kata.TicTacToe
 		{
 			_events.OnNext(new XMarkedEvent(x, y));
 
-			return default(Result<Unit, GameError>);
+			return Result.Failure<Unit, GameError>(GameError.MarkOutsideBoard);
 		}
 	}
 }
