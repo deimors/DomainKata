@@ -11,12 +11,10 @@ namespace Kata.TicTacToe
 
 		public IObservable<GameEvent> Events => _events;
 
-		public Result<Unit, GameError> MarkX(int x, int y)
-		{
-			_events.OnNext(new XMarkedEvent(x, y));
-
-			return Result.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard);
-		}
+		public Result<Unit, GameError> MarkX(int x, int y) 
+			=> Result
+				.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard)
+				.Do(_ => _events.OnNext(new XMarkedEvent(x, y)));
 
 		private static bool IsMarkInsideBoard(int x, int y)
 			=> x >= 0 && x <= 2 && y >= 0 && y <= 2;
