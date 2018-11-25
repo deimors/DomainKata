@@ -16,6 +16,7 @@ namespace Kata.TicTacToe
 		public Result<Unit, GameError> MarkX(int x, int y) 
 			=> Result
 				.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard)
+				.Bind(_ => Result.Create(_isXTurn, () => Unit.Value, () => GameError.OutOfOrderMark))
 				.Do(_ => _isXTurn = false)
 				.Do(_ => _events.OnNext(new XMarkedEvent(x, y)));
 
