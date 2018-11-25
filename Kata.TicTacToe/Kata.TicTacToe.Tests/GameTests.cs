@@ -30,6 +30,18 @@ namespace Kata.TicTacToe.Tests
 			Assert_EventObserved(new XMarkedEvent(x, y));
 		}
 
+		[Theory]
+		[InlineData(-1, 0), InlineData(3, 0), InlineData(0, -1), InlineData(0, 3)]
+		public void MarkXThenOOutsideBoard(int x, int y)
+		{
+			Act_MarkX(0, 0);
+			
+			Act_MarkO(x, y)
+				.Assert_Failure(GameError.MarkOutsideBoard);
+
+			Assert_EventNotObserved<OMarkedEvent>();
+		}
+
 		[Fact]
 		public void MarkOFirst()
 		{
