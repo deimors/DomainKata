@@ -21,7 +21,7 @@ namespace Kata.TicTacToe
 
 		public Result<Unit, GameError> MarkO(int x, int y)
 		{
-			throw new NotImplementedException();
+			return Result.Failure<Unit, GameError>(GameError.OutOfOrderMark);
 		}
 	}
 }
