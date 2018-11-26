@@ -111,14 +111,14 @@ namespace Kata.TicTacToe.Tests
 			Assert_EventNotObserved<XWinsEvent>();
 		}
 
-		[Fact]
-		public void WinForX()
+		[Theory, InlineData(0), InlineData(1), InlineData(2)]
+		public void HorizontalWinForX(int x)
 		{
-			Act_MarkX(0, 0);
-			Act_MarkO(1, 1);
-			Act_MarkX(0, 1);
-			Act_MarkO(2, 2);
-			Act_MarkX(0, 2);
+			Act_MarkX(x, 0);
+			Act_MarkO((x + 1) % 3, 1);
+			Act_MarkX(x, 1);
+			Act_MarkO((x + 1) % 3, 2);
+			Act_MarkX(x, 2);
 
 			Assert_EventObserved(
 				new XWinsEvent()
