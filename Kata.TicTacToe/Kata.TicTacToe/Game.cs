@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reactive.Subjects;
 using Functional;
 using Unit = Functional.Unit;
@@ -27,9 +29,8 @@ namespace Kata.TicTacToe
 				.Bind(_ => FailIfOutOfTurnOrder(mark))
 				.Do(_ => _board[x, y] = Option.Some(mark))
 				.Do(_ => _nextMark = Successor(_nextMark))
-				.Do(_ => _events.OnNext(markedEventFactory()));
 				.Do(_ => _events.OnNext(markedEventFactory()))
-				.Do(_ => _events.OnNext(new XWinsEvent()));
+				.Do(_ => EventOnWin(mark));
 
 		private Result<Unit, GameError> FailIfOutOfTurnOrder(Mark mark) 
 			=> Result.Create(_nextMark == mark, () => Unit.Value, () => GameError.OutOfOrderMark);
@@ -45,5 +46,21 @@ namespace Kata.TicTacToe
 
 		private static bool IsMarkInsideBoard(int x, int y)
 			=> x >= 0 && x <= 2 && y >= 0 && y <= 2;
+
+		private void EventOnWin(Mark mark)
+		{
+			if (TestForWin(mark))
+				_events.OnNext(new XWinsEvent());
+		}
+
+		private bool TestForWin(Mark mark) 
+			=> MarksToTest().All(markOption => markOption == Option.Some(mark));
+
+		private IEnumerable<Option<Mark>> MarksToTest()
+		{
+			yield return _board[0, 0];
+			yield return _board[0, 1];
+			yield return _board[0, 2];
+		}
 	}
 }
