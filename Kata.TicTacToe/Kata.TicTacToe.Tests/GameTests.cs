@@ -101,6 +101,17 @@ namespace Kata.TicTacToe.Tests
 		}
 
 		[Fact]
+		public void TurnBeforeWinForX()
+		{
+			Act_MarkX(0, 0);
+			Act_MarkO(1, 1);
+			Act_MarkX(0, 1);
+			Act_MarkO(2, 2);
+
+			Assert_EventNotObserved<XWinsEvent>();
+		}
+
+		[Fact]
 		public void WinForX()
 		{
 			Act_MarkX(0, 0);
