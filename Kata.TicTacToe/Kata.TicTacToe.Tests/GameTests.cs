@@ -112,13 +112,27 @@ namespace Kata.TicTacToe.Tests
 		}
 
 		[Theory, InlineData(0), InlineData(1), InlineData(2)]
-		public void HorizontalWinForX(int x)
+		public void WinForXHorizontal(int x)
 		{
 			Act_MarkX(x, 0);
 			Act_MarkO((x + 1) % 3, 1);
 			Act_MarkX(x, 1);
 			Act_MarkO((x + 1) % 3, 2);
 			Act_MarkX(x, 2);
+
+			Assert_EventObserved(
+				new XWinsEvent()
+			);
+		}
+
+		[Theory, InlineData(0), InlineData(1), InlineData(2)]
+		public void WinForXVertical(int y)
+		{
+			Act_MarkX(0, y);
+			Act_MarkO(1, (y + 1) % 3);
+			Act_MarkX(1, y);
+			Act_MarkO(2, (y + 1) % 3);
+			Act_MarkX(2, y);
 
 			Assert_EventObserved(
 				new XWinsEvent()
