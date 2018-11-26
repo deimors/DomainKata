@@ -3,6 +3,7 @@
 	public enum GameError
 	{
 		MarkOutsideBoard,
-		OutOfOrderMark
+		OutOfOrderMark,
+		SpaceAlreadyFilled
 	}
 }

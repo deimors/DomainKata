@@ -90,6 +90,15 @@ namespace Kata.TicTacToe.Tests
 				new XMarkedEvent(1, 1)
 			);
 		}
+
+		[Fact]
+		public void MarkXThenOInSameSpace()
+		{
+			Act_MarkX(0, 0);
+
+			Act_MarkO(0, 0)
+				.Assert_Failure(GameError.SpaceAlreadyFilled);
+		}
 	}
 
 	public static class GameTestExtensions
