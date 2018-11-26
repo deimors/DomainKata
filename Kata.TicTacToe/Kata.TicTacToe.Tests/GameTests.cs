@@ -99,6 +99,20 @@ namespace Kata.TicTacToe.Tests
 			Act_MarkO(0, 0)
 				.Assert_Failure(GameError.SpaceAlreadyFilled);
 		}
+
+		[Fact]
+		public void WinForX()
+		{
+			Act_MarkX(0, 0);
+			Act_MarkO(1, 1);
+			Act_MarkX(0, 1);
+			Act_MarkO(2, 2);
+			Act_MarkX(0, 2);
+
+			Assert_EventObserved(
+				new XWinsEvent()
+			);
+		}
 	}
 
 	public static class GameTestExtensions
