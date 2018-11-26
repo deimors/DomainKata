@@ -49,18 +49,14 @@ namespace Kata.TicTacToe
 
 		private void EventOnWin(Mark mark)
 		{
-			if (TestForWin(mark))
+			if (GameWonBy(mark))
 				_events.OnNext(new XWinsEvent());
 		}
 
-		private bool TestForWin(Mark mark) 
-			=> MarksToTest().All(markOption => markOption == Option.Some(mark));
+		private bool GameWonBy(Mark mark) 
+			=> HorizontalSequences.Any(sequence => sequence.All(markOption => markOption == Option.Some(mark)));
 
-		private IEnumerable<Option<Mark>> MarksToTest()
-		{
-			yield return _board[0, 0];
-			yield return _board[0, 1];
-			yield return _board[0, 2];
-		}
+		private IEnumerable<IEnumerable<Option<Mark>>> HorizontalSequences
+			=> Enumerable.Range(0, 3).Select(x => Enumerable.Range(0, 3).Select(y => _board[x, y]));
 	}
 }
