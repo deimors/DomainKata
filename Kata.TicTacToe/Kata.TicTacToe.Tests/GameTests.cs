@@ -152,6 +152,20 @@ namespace Kata.TicTacToe.Tests
 				new XWinsEvent()
 			);
 		}
+
+		[Fact]
+		public void WinForXSecondDiagonal()
+		{
+			Act_MarkX(0, 2);
+			Act_MarkO(0, 0);
+			Act_MarkX(1, 1);
+			Act_MarkO(1, 0);
+			Act_MarkX(2, 0);
+
+			Assert_EventObserved(
+				new XWinsEvent()
+			);
+		}
 	}
 
 	public static class GameTestExtensions
