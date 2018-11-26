@@ -56,6 +56,7 @@ namespace Kata.TicTacToe
 		private bool GameWonBy(Mark mark) 
 			=> HorizontalSequences
 				.Concat(VerticalSequences)
+				.Append(FirstDiagonal)
 				.Any(sequence => sequence.All(markOption => markOption == Option.Some(mark)));
 
 		private IEnumerable<IEnumerable<Option<Mark>>> HorizontalSequences
@@ -63,5 +64,8 @@ namespace Kata.TicTacToe
 
 		private IEnumerable<IEnumerable<Option<Mark>>> VerticalSequences
 			=> Enumerable.Range(0, 3).Select(y => Enumerable.Range(0, 3).Select(x => _board[x, y]));
+
+		private IEnumerable<Option<Mark>> FirstDiagonal
+			=> Enumerable.Range(0, 3).Select(x =>  _board[x, x]);
 	}
 }
