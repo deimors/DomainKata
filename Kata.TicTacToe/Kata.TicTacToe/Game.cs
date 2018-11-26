@@ -57,6 +57,7 @@ namespace Kata.TicTacToe
 			=> HorizontalSequences
 				.Concat(VerticalSequences)
 				.Append(FirstDiagonal)
+				.Append(SecondDiagonal)
 				.Any(sequence => sequence.All(markOption => markOption == Option.Some(mark)));
 
 		private IEnumerable<IEnumerable<Option<Mark>>> HorizontalSequences
@@ -67,5 +68,8 @@ namespace Kata.TicTacToe
 
 		private IEnumerable<Option<Mark>> FirstDiagonal
 			=> Enumerable.Range(0, 3).Select(x =>  _board[x, x]);
+
+		private IEnumerable<Option<Mark>> SecondDiagonal
+			=> Enumerable.Range(0, 3).Select(x => _board[2 - x, x]);
 	}
 }
