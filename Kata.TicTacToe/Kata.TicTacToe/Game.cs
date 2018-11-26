@@ -22,13 +22,21 @@ namespace Kata.TicTacToe
 			=> ApplyMark(x, y, Mark.O, () => new OMarkedEvent(x, y));
 
 		private Result<Unit, GameError> ApplyMark(int x, int y, Mark mark, Func<GameEvent> markedEventFactory)
-			=> Result
-				.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard)
-				.Bind(_ => _board[x, y].Match(some => Result.Failure<Unit, GameError>(GameError.SpaceAlreadyFilled), () => Result.Success<Unit, GameError>(Unit.Value)))
-				.Bind(_ => Result.Create(_nextMark == mark, () => Unit.Value, () => GameError.OutOfOrderMark))
+			=> FailIfOutsideBoard(x, y)
+				.Bind(_ => FailIfSpaceAlreadyFilled(x, y))
+				.Bind(_ => FailIfOutOfTurnOrder(mark))
 				.Do(_ => _board[x, y] = Option.Some(mark))
 				.Do(_ => _nextMark = Successor(_nextMark))
 				.Do(_ => _events.OnNext(markedEventFactory()));
+
+		private Result<Unit, GameError> FailIfOutOfTurnOrder(Mark mark) 
+			=> Result.Create(_nextMark == mark, () => Unit.Value, () => GameError.OutOfOrderMark);
+
+		private Result<Unit, GameError> FailIfSpaceAlreadyFilled(int x, int y) 
+			=> _board[x, y].Match(some => Result.Failure<Unit, GameError>(GameError.SpaceAlreadyFilled), () => Result.Success<Unit, GameError>(Unit.Value));
+
+		private static Result<Unit, GameError> FailIfOutsideBoard(int x, int y) 
+			=> Result.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard);
 
 		private static Mark Successor(Mark current)
 			=> current == Mark.X ? Mark.O : Mark.X;
