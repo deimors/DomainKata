@@ -50,7 +50,7 @@ namespace Kata.TicTacToe
 		private void EventOnWin(Mark mark)
 		{
 			if (GameWonBy(mark))
-				_events.OnNext(new XWinsEvent());
+				_events.OnNext(GetWinEvent(mark));
 		}
 
 		private bool GameWonBy(Mark mark) 
@@ -76,5 +76,8 @@ namespace Kata.TicTacToe
 
 		private IEnumerable<Option<Mark>> SecondDiagonal
 			=> Enumerable.Range(0, 3).Select(x => _board[2 - x, x]);
+
+		private static GameEvent GetWinEvent(Mark mark)
+			=> mark == Mark.X ? (GameEvent)new XWinsEvent() : new OWinsEvent();
 	}
 }
