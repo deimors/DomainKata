@@ -181,6 +181,51 @@ namespace Kata.TicTacToe.Tests
 				new OWinsEvent()
 			);
 		}
+
+		[Theory, InlineData(0), InlineData(1), InlineData(2)]
+		public void WinForOVertical(int y)
+		{
+			Act_MarkX(0, (y + 1) % 3);
+			Act_MarkO(0, y);
+			Act_MarkX(1, (y + 2) % 3);
+			Act_MarkO(1, y);
+			Act_MarkX(2, (y + 1) % 3);
+			Act_MarkO(2, y);
+
+			Assert_EventObserved(
+				new OWinsEvent()
+			);
+		}
+
+		[Fact]
+		public void WinForOFirstDiagonal()
+		{
+			Act_MarkX(0, 2);
+			Act_MarkO(0, 0);
+			Act_MarkX(1, 0);
+			Act_MarkO(1, 1);
+			Act_MarkX(2, 0);
+			Act_MarkO(2, 2);
+
+			Assert_EventObserved(
+				new OWinsEvent()
+			);
+		}
+
+		[Fact]
+		public void WinForOSecondDiagonal()
+		{
+			Act_MarkX(1, 2);
+			Act_MarkO(0, 2);
+			Act_MarkX(0, 0);
+			Act_MarkO(1, 1);
+			Act_MarkX(1, 0);
+			Act_MarkO(2, 0);
+
+			Assert_EventObserved(
+				new OWinsEvent()
+			);
+		}
 	}
 
 	public static class GameTestExtensions
