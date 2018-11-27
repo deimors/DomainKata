@@ -9,11 +9,13 @@ namespace Kata.TicTacToe
 {
 	public class Game
 	{
+		private const int Size = 3;
+
 		private readonly ISubject<GameEvent> _events = new Subject<GameEvent>();
 		
 		private Mark _nextMark = Mark.X;
 
-		private readonly Option<Mark>[,] _board = new Option<Mark>[3,3];
+		private readonly Option<Mark>[,] _board = new Option<Mark>[Size, Size];
 
 		public IObservable<GameEvent> Events => _events;
 
@@ -28,7 +30,7 @@ namespace Kata.TicTacToe
 				.Bind(_ => FailIfSpaceAlreadyFilled(x, y))
 				.Bind(_ => FailIfOutOfTurnOrder(mark))
 				.Do(_ => _board[x, y] = Option.Some(mark))
-				.Do(_ => _nextMark = Successor(_nextMark))
+				.Do(_ => _nextMark = Successor(mark))
 				.Do(_ => _events.OnNext(markedEventFactory()))
 				.Do(_ => EventOnWin(mark));
 
@@ -45,7 +47,7 @@ namespace Kata.TicTacToe
 			=> current == Mark.X ? Mark.O : Mark.X;
 
 		private static bool IsMarkInsideBoard(int x, int y)
-			=> x >= 0 && x <= 2 && y >= 0 && y <= 2;
+			=> x >= 0 && x < Size && y >= 0 && y < Size;
 
 		private void EventOnWin(Mark mark)
 		{
@@ -60,22 +62,21 @@ namespace Kata.TicTacToe
 			=> sequence.All(markOption => markOption == Option.Some(mark));
 
 		private IEnumerable<IEnumerable<Option<Mark>>> Sequences 
-			=> HorizontalSequences
-				.Concat(VerticalSequences)
-				.Append(FirstDiagonal)
-				.Append(SecondDiagonal);
+			=> HorizontalSequences.Concat(VerticalSequences).Append(FirstDiagonal).Append(SecondDiagonal);
 
 		private IEnumerable<IEnumerable<Option<Mark>>> HorizontalSequences
-			=> Enumerable.Range(0, 3).Select(x => Enumerable.Range(0, 3).Select(y => _board[x, y]));
+			=> SequenceRange.Select(x => SequenceRange.Select(y => _board[x, y]));
 
 		private IEnumerable<IEnumerable<Option<Mark>>> VerticalSequences
-			=> Enumerable.Range(0, 3).Select(y => Enumerable.Range(0, 3).Select(x => _board[x, y]));
+			=> SequenceRange.Select(y => SequenceRange.Select(x => _board[x, y]));
 
 		private IEnumerable<Option<Mark>> FirstDiagonal
-			=> Enumerable.Range(0, 3).Select(x =>  _board[x, x]);
+			=> SequenceRange.Select(x =>  _board[x, x]);
 
 		private IEnumerable<Option<Mark>> SecondDiagonal
-			=> Enumerable.Range(0, 3).Select(x => _board[2 - x, x]);
+			=> SequenceRange.Select(x => _board[Size - 1 - x, x]);
+
+		private static IEnumerable<int> SequenceRange => Enumerable.Range(0, Size);
 
 		private static GameEvent GetWinEvent(Mark mark)
 			=> mark == Mark.X ? (GameEvent)new XWinsEvent() : new OWinsEvent();
