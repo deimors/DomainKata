@@ -58,15 +58,18 @@ namespace Kata.TicTacToe
 
 		private void EventOnDraw()
 		{
-			if (HorizontalSequences.All(sequence => sequence.All(space => space.Match(someMark => true, () => false))))
+			if (AllSpacesFilled)
 				_events.OnNext(new DrawEvent());
 		}
+
+		private bool AllSpacesFilled 
+			=> HorizontalSequences.All(sequence => sequence.All(space => space.Match(someMark => true, () => false)));
 
 		private bool GameWonBy(Mark mark) 
 			=> Sequences.Any(sequence => SequenceFilledByMark(mark, sequence));
 
 		private static bool SequenceFilledByMark(Mark mark, IEnumerable<Option<Mark>> sequence) 
-			=> sequence.All(markOption => markOption == Option.Some(mark));
+			=> sequence.All(space => space == Option.Some(mark));
 
 		private IEnumerable<IEnumerable<Option<Mark>>> Sequences 
 			=> HorizontalSequences.Concat(VerticalSequences).Append(FirstDiagonal).Append(SecondDiagonal);
