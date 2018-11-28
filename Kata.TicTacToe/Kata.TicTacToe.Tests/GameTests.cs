@@ -244,6 +244,21 @@ namespace Kata.TicTacToe.Tests
 				new DrawEvent()
 			);
 		}
+
+		[Fact]
+		public void TurnBeforeDraw()
+		{
+			Act_MarkX(1, 2);
+			Act_MarkO(0, 2);
+			Act_MarkX(0, 0);
+			Act_MarkO(1, 1);
+			Act_MarkX(2, 0);
+			Act_MarkO(2, 1);
+			Act_MarkX(0, 1);
+			Act_MarkO(1, 0);
+			
+			Assert_EventNotObserved<DrawEvent>();
+		}
 	}
 
 	public static class GameTestExtensions
