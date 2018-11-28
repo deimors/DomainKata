@@ -20,21 +20,21 @@ namespace Kata.TicTacToe
 		public IObservable<GameEvent> Events => _events;
 
 		public Result<Unit, GameError> MarkX(int x, int y)
-			=> ApplyMark(x, y, Mark.X, () => new XMarkedEvent(x, y));
+			=> ApplyMark(x, y, Mark.X);
 
 		public Result<Unit, GameError> MarkO(int x, int y)
-			=> ApplyMark(x, y, Mark.O, () => new OMarkedEvent(x, y));
+			=> ApplyMark(x, y, Mark.O);
 
-		private Result<Unit, GameError> ApplyMark(int x, int y, Mark mark, Func<GameEvent> markedEventFactory)
+		private Result<Unit, GameError> ApplyMark(int x, int y, Mark mark)
 			=> FailIfOutsideBoard(x, y)
 				.Bind(_ => FailIfSpaceAlreadyFilled(x, y))
 				.Bind(_ => FailIfOutOfTurnOrder(mark))
-				.Do(_ => _board[x, y] = Option.Some(mark))
-				.Do(_ => _nextMark = Successor(mark))
-				.Do(_ => _events.OnNext(markedEventFactory()))
+				.Do(_ => RecordMark(x, y, mark))
+				.Do(_ => NextTurn(mark))
+				.Do(_ => EventForMark(x, y, mark))
 				.Do(_ => EventOnWin(mark))
 				.Do(_ => EventOnDraw());
-
+		
 		private Result<Unit, GameError> FailIfOutOfTurnOrder(Mark mark) 
 			=> Result.Create(_nextMark == mark, () => Unit.Value, () => GameError.OutOfOrderMark);
 
@@ -43,12 +43,21 @@ namespace Kata.TicTacToe
 
 		private static Result<Unit, GameError> FailIfOutsideBoard(int x, int y) 
 			=> Result.Create(IsMarkInsideBoard(x, y), () => Unit.Value, () => GameError.MarkOutsideBoard);
+		
+		private static bool IsMarkInsideBoard(int x, int y)
+			=> x >= 0 && x < Size && y >= 0 && y < Size;
+
+		private void RecordMark(int x, int y, Mark mark)
+			=> _board[x, y] = Option.Some(mark);
+
+		private void NextTurn(Mark mark)
+			=> _nextMark = Successor(mark);
 
 		private static Mark Successor(Mark current)
 			=> current == Mark.X ? Mark.O : Mark.X;
 
-		private static bool IsMarkInsideBoard(int x, int y)
-			=> x >= 0 && x < Size && y >= 0 && y < Size;
+		private void EventForMark(int x, int y, Mark mark)
+			=> _events.OnNext(mark == Mark.X ? (GameEvent)new XMarkedEvent(x, y) : new OMarkedEvent(x, y));
 
 		private void EventOnWin(Mark mark)
 		{
