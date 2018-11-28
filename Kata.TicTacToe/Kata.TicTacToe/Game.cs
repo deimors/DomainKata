@@ -32,7 +32,8 @@ namespace Kata.TicTacToe
 				.Do(_ => _board[x, y] = Option.Some(mark))
 				.Do(_ => _nextMark = Successor(mark))
 				.Do(_ => _events.OnNext(markedEventFactory()))
-				.Do(_ => EventOnWin(mark));
+				.Do(_ => EventOnWin(mark))
+				.Do(_ => _events.OnNext(new DrawEvent()));
 
 		private Result<Unit, GameError> FailIfOutOfTurnOrder(Mark mark) 
 			=> Result.Create(_nextMark == mark, () => Unit.Value, () => GameError.OutOfOrderMark);
