@@ -33,7 +33,7 @@ namespace Kata.TicTacToe
 				.Do(_ => _nextMark = Successor(mark))
 				.Do(_ => _events.OnNext(markedEventFactory()))
 				.Do(_ => EventOnWin(mark))
-				.Do(_ => _events.OnNext(new DrawEvent()));
+				.Do(_ => EventOnDraw());
 
 		private Result<Unit, GameError> FailIfOutOfTurnOrder(Mark mark) 
 			=> Result.Create(_nextMark == mark, () => Unit.Value, () => GameError.OutOfOrderMark);
@@ -54,6 +54,12 @@ namespace Kata.TicTacToe
 		{
 			if (GameWonBy(mark))
 				_events.OnNext(GetWinEvent(mark));
+		}
+
+		private void EventOnDraw()
+		{
+			if (HorizontalSequences.All(sequence => sequence.All(space => space.Match(someMark => true, () => false))))
+				_events.OnNext(new DrawEvent());
 		}
 
 		private bool GameWonBy(Mark mark) 
