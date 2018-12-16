@@ -41,6 +41,14 @@ namespace Kata.LockedDoor.Tests
 
 			Assert_EventNotObserved<DoorOpenedEvent>();
 		}
+
+		[Fact]
+		public void UnlockLockedDoor()
+		{
+			var result = _door.Unlock();
+
+			result.Should().Be(Result.Success<Unit, DoorError>(Unit.Value));
+		}
 	}
 
 	public class UnlockedDoorTests : DoorTestFixture
