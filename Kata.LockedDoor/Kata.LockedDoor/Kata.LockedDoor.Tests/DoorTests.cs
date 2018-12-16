@@ -28,5 +28,14 @@ namespace Kata.LockedDoor.Tests
 
 			Assert_EventObserved(new DoorOpenedEvent());
 		}
+
+		private void Assert_EventObserved(DoorOpenedEvent doorEvent)
+		{
+			throw new NotImplementedException();
+		}
+	}
+
+	public class DoorOpenedEvent
+	{
 	}
 }
