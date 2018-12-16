@@ -3,12 +3,16 @@ using Xunit;
 
 namespace Kata.LockedDoor.Tests
 {
-	public class UnitTest1
+	public class DoorTests
 	{
 		[Fact]
-		public void Test1()
+		public void TryToOpenLockedDoor()
 		{
+			var door = new Door(initiallyLocked: true);
 
+			var result = door.Open();
+
+			result.Should().Be(Result.Fail<Unit, DoorError>(DoorError.CantOpenLockedDoor));
 		}
 	}
 }
