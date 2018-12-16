@@ -10,7 +10,7 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void TryToOpenLockedDoor()
 		{
-			var door = new Door(initiallyLocked: true);
+			var door = new Door(locked: true);
 
 			var result = door.Open();
 
@@ -20,7 +20,7 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void TryToOpenUnlockedDoor()
 		{
-			var door = new Door(initiallyLocked: false);
+			var door = new Door(locked: false);
 
 			var result = door.Open();
 
@@ -35,14 +35,16 @@ namespace Kata.LockedDoor.Tests
 
 	public class Door
 	{
-		public Door(bool initiallyLocked)
+		private readonly bool _locked;
+
+		public Door(bool locked)
 		{
-			
+			_locked = locked;
 		}
 
 		public Result<Unit, DoorError> Open()
 		{
-			return Result.Failure<Unit, DoorError>(DoorError.CantOpenLockedDoor);
+			return Result.Create(!_locked, Unit.Value, DoorError.CantOpenLockedDoor);
 		}
 	}
 }
