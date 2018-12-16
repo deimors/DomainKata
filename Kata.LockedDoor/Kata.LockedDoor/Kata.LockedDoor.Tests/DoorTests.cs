@@ -27,12 +27,12 @@ namespace Kata.LockedDoor.Tests
 	{
 		public Door(bool initiallyLocked)
 		{
-			throw new NotImplementedException();
+			
 		}
 
 		public Result<Unit, DoorError> Open()
 		{
-			throw new NotImplementedException();
+			return Result.Failure<Unit, DoorError>(DoorError.CantOpenLockedDoor);
 		}
 	}
 }
