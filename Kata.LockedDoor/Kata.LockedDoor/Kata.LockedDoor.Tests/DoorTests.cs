@@ -16,6 +16,16 @@ namespace Kata.LockedDoor.Tests
 
 			result.Should().Be(Result.Failure<Unit, DoorError>(DoorError.CantOpenLockedDoor));
 		}
+
+		[Fact]
+		public void TryToOpenUnlockedDoor()
+		{
+			var door = new Door(initiallyLocked: false);
+
+			var result = door.Open();
+
+			result.Should().Be(Result.Success<Unit, DoorError>(Unit.Value));
+		}
 	}
 
 	public enum DoorError
