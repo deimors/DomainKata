@@ -64,5 +64,13 @@ namespace Kata.LockedDoor.Tests
 
 			Assert_EventObserved(new DoorOpenedEvent());
 		}
+
+		[Fact]
+		public void UnlockUnlockedDoor()
+		{
+			var result = _door.Unlock();
+
+			result.Should().Be(Result.Failure<Unit, DoorError>(DoorError.DoorAlreadyUnlocked));
+		}
 	}
 }

@@ -2,6 +2,7 @@ namespace Kata.LockedDoor
 {
 	public enum DoorError
 	{
-		CantOpenLockedDoor
+		CantOpenLockedDoor,
+		DoorAlreadyUnlocked
 	}
 }
