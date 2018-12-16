@@ -1,4 +1,6 @@
 using System;
+using FluentAssertions;
+using Functional;
 using Xunit;
 
 namespace Kata.LockedDoor.Tests
@@ -12,7 +14,25 @@ namespace Kata.LockedDoor.Tests
 
 			var result = door.Open();
 
-			result.Should().Be(Result.Fail<Unit, DoorError>(DoorError.CantOpenLockedDoor));
+			result.Should().Be(Result.Failure<Unit, DoorError>(DoorError.CantOpenLockedDoor));
+		}
+	}
+
+	public enum DoorError
+	{
+		CantOpenLockedDoor
+	}
+
+	public class Door
+	{
+		public Door(bool initiallyLocked)
+		{
+			throw new NotImplementedException();
+		}
+
+		public Result<Unit, DoorError> Open()
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
