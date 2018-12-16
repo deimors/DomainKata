@@ -16,7 +16,8 @@ namespace Kata.LockedDoor
 
 		public Result<Unit, DoorError> Open()
 		{
-			_events.OnNext(new DoorOpenedEvent());
+			if (!_locked)
+				_events.OnNext(new DoorOpenedEvent());
 
 			return Result.Create(!_locked, Unit.Value, DoorError.CantOpenLockedDoor);
 		}
