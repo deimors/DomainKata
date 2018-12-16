@@ -16,9 +16,18 @@ namespace Kata.LockedDoor.Tests
 		{
 			_door = new Door(locked: true);
 
+			_door.Subscribe(_observer);
+
 			var result = _door.Open();
 
 			result.Should().Be(Result.Failure<Unit, DoorError>(DoorError.CantOpenLockedDoor));
+
+			Assert_EventNotObserved<DoorOpenedEvent>();
+		}
+
+		private void Assert_EventNotObserved<T>() where T : DoorOpenedEvent
+		{
+			A.CallTo(() => _observer.OnNext(A<T>._)).MustNotHaveHappened();
 		}
 
 		[Fact]
