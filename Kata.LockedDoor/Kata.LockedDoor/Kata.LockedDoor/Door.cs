@@ -1,10 +1,13 @@
+using System;
+using System.Reactive.Subjects;
 using Functional;
 
 namespace Kata.LockedDoor
 {
-	public class Door
+	public class Door : IObservable<DoorOpenedEvent>
 	{
 		private readonly bool _locked;
+		private readonly Subject<DoorOpenedEvent> _events = new Subject<DoorOpenedEvent>();
 
 		public Door(bool locked)
 		{
@@ -14,6 +17,11 @@ namespace Kata.LockedDoor
 		public Result<Unit, DoorError> Open()
 		{
 			return Result.Create(!_locked, Unit.Value, DoorError.CantOpenLockedDoor);
+		}
+
+		public IDisposable Subscribe(IObserver<DoorOpenedEvent> observer)
+		{
+			return _events.Subscribe(observer);
 		}
 	}
 }

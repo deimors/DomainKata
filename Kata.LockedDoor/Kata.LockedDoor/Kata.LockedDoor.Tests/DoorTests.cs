@@ -1,4 +1,5 @@
 using System;
+using FakeItEasy;
 using FluentAssertions;
 using Functional;
 using Xunit;
@@ -7,12 +8,15 @@ namespace Kata.LockedDoor.Tests
 {
 	public class DoorTests
 	{
+		private Door _door;
+		private readonly IObserver<DoorOpenedEvent> _observer = A.Fake<IObserver<DoorOpenedEvent>>();
+
 		[Fact]
 		public void TryToOpenLockedDoor()
 		{
-			var door = new Door(locked: true);
+			_door = new Door(locked: true);
 
-			var result = door.Open();
+			var result = _door.Open();
 
 			result.Should().Be(Result.Failure<Unit, DoorError>(DoorError.CantOpenLockedDoor));
 		}
@@ -20,22 +24,20 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void TryToOpenUnlockedDoor()
 		{
-			var door = new Door(locked: false);
+			_door = new Door(locked: false);
 
-			var result = door.Open();
+			_door.Subscribe(_observer);
+
+			var result = _door.Open();
 
 			result.Should().Be(Result.Success<Unit, DoorError>(Unit.Value));
 
 			Assert_EventObserved(new DoorOpenedEvent());
 		}
 
-		private void Assert_EventObserved(DoorOpenedEvent doorEvent)
+		private void Assert_EventObserved(DoorOpenedEvent expectedEvent)
 		{
-			throw new NotImplementedException();
+			A.CallTo(() => _observer.OnNext(expectedEvent)).MustHaveHappened();
 		}
-	}
-
-	public class DoorOpenedEvent
-	{
 	}
 }
