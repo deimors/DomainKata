@@ -20,5 +20,8 @@ namespace Kata.LockedDoor
 
 		public IDisposable Subscribe(IObserver<DoorOpenedEvent> observer) 
 			=> _events.Subscribe(observer);
+
+		public Result<Unit, DoorError> Unlock()
+			=> Result.Success<Unit, DoorError>(Unit.Value);
 	}
 }
