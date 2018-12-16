@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.28010.2016
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kata.LockedDoor.Tests", "Kata.LockedDoor.Tests\Kata.LockedDoor.Tests.csproj", "{C525E502-0A10-43CF-8C94-1DD2B916D4D4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Kata.LockedDoor", "Kata.LockedDoor\Kata.LockedDoor.csproj", "{F86DECB1-116A-44B9-A804-293FC2626D0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C525E502-0A10-43CF-8C94-1DD2B916D4D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C525E502-0A10-43CF-8C94-1DD2B916D4D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C525E502-0A10-43CF-8C94-1DD2B916D4D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F86DECB1-116A-44B9-A804-293FC2626D0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F86DECB1-116A-44B9-A804-293FC2626D0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F86DECB1-116A-44B9-A804-293FC2626D0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F86DECB1-116A-44B9-A804-293FC2626D0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
