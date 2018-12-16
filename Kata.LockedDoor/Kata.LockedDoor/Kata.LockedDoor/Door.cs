@@ -14,17 +14,11 @@ namespace Kata.LockedDoor
 			_locked = locked;
 		}
 
-		public Result<Unit, DoorError> Open()
-		{
-			if (!_locked)
-				_events.OnNext(new DoorOpenedEvent());
+		public Result<Unit, DoorError> Open() 
+			=> Result.Create(!_locked, Unit.Value, DoorError.CantOpenLockedDoor)
+				.Do(_ => _events.OnNext(new DoorOpenedEvent()));
 
-			return Result.Create(!_locked, Unit.Value, DoorError.CantOpenLockedDoor);
-		}
-
-		public IDisposable Subscribe(IObserver<DoorOpenedEvent> observer)
-		{
-			return _events.Subscribe(observer);
-		}
+		public IDisposable Subscribe(IObserver<DoorOpenedEvent> observer) 
+			=> _events.Subscribe(observer);
 	}
 }
