@@ -25,6 +25,8 @@ namespace Kata.LockedDoor.Tests
 			var result = door.Open();
 
 			result.Should().Be(Result.Success<Unit, DoorError>(Unit.Value));
+
+			Assert_EventObserved(new DoorOpenedEvent());
 		}
 	}
 }
