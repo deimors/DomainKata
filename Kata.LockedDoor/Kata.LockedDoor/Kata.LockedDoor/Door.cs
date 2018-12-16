@@ -22,6 +22,6 @@ namespace Kata.LockedDoor
 			=> _events.Subscribe(observer);
 
 		public Result<Unit, DoorError> Unlock()
-			=> Result.Success<Unit, DoorError>(Unit.Value);
+			=> Result.Create(_locked, Unit.Value, DoorError.DoorAlreadyUnlocked);
 	}
 }
