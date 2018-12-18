@@ -35,19 +35,17 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void TryToOpenLockedDoor()
 		{
-			var result = _door.Open();
-
-			result.Should().Be(Result.Failure<Unit, DoorError>(DoorError.CantOpenLockedDoor));
-
+			_door.Open()
+				.Assert_Failure(DoorError.CantOpenLockedDoor);
+			
 			Assert_EventNotObserved<DoorOpenedEvent>();
 		}
 
 		[Fact]
 		public void UnlockLockedDoor()
 		{
-			var result = _door.Unlock();
-
-			result.Should().Be(Result.Success<Unit, DoorError>(Unit.Value));
+			_door.Unlock()
+				.Assert_Success();
 		}
 	}
 
@@ -58,9 +56,7 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void TryToOpenUnlockedDoor()
 		{
-			var result = _door.Open();
-
-			result.Should().Be(Result.Success<Unit, DoorError>(Unit.Value));
+			_door.Open().Assert_Success();
 
 			Assert_EventObserved(new DoorOpenedEvent());
 		}
@@ -68,9 +64,17 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void UnlockUnlockedDoor()
 		{
-			var result = _door.Unlock();
-
-			result.Should().Be(Result.Failure<Unit, DoorError>(DoorError.DoorAlreadyUnlocked));
+			_door.Unlock()
+				.Assert_Failure(DoorError.DoorAlreadyUnlocked);
 		}
+	}
+
+	public static class DoorTestExtensions
+	{
+		public static void Assert_Success(this Result<Unit, DoorError> result)
+			=> result.Should().Be(Result.Success<Unit, DoorError>(Unit.Value));
+
+		public static void Assert_Failure(this Result<Unit, DoorError> result, DoorError expected)
+			=> result.Should().Be(Result.Failure<Unit, DoorError>(expected));
 	}
 }
