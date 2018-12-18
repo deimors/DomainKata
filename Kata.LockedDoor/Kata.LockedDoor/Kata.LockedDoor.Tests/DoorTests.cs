@@ -8,8 +8,8 @@ namespace Kata.LockedDoor.Tests
 {
 	public class DoorTestFixture
 	{
-		protected readonly Door _door;
-		protected readonly IObserver<DoorOpenedEvent> _observer = A.Fake<IObserver<DoorOpenedEvent>>();
+		private readonly Door _door;
+		private readonly IObserver<DoorOpenedEvent> _observer = A.Fake<IObserver<DoorOpenedEvent>>();
 
 		protected DoorTestFixture(Door door)
 		{
@@ -17,15 +17,19 @@ namespace Kata.LockedDoor.Tests
 			_door.Subscribe(_observer);
 		}
 
-		protected void Assert_EventNotObserved<T>() where T : DoorOpenedEvent
-		{
-			A.CallTo(() => _observer.OnNext(A<T>._)).MustNotHaveHappened();
-		}
+		protected void Assert_EventNotObserved<T>() where T : DoorOpenedEvent 
+			=> A.CallTo(() => _observer.OnNext(A<T>._))
+				.MustNotHaveHappened();
 
-		protected void Assert_EventObserved(DoorOpenedEvent expectedEvent)
-		{
-			A.CallTo(() => _observer.OnNext(expectedEvent)).MustHaveHappened();
-		}
+		protected void Assert_EventObserved(DoorOpenedEvent expectedEvent) 
+			=> A.CallTo(() => _observer.OnNext(expectedEvent))
+				.MustHaveHappened();
+
+		protected Result<Unit, DoorError> Act_Open() 
+			=> _door.Open();
+
+		protected Result<Unit, DoorError> Act_Unlock() 
+			=> _door.Unlock();
 	}
 
 	public class LockedDoorTests : DoorTestFixture
@@ -35,7 +39,7 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void TryToOpenLockedDoor()
 		{
-			_door.Open()
+			Act_Open()
 				.Assert_Failure(DoorError.CantOpenLockedDoor);
 			
 			Assert_EventNotObserved<DoorOpenedEvent>();
@@ -44,7 +48,7 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void UnlockLockedDoor()
 		{
-			_door.Unlock()
+			Act_Unlock()
 				.Assert_Success();
 		}
 	}
@@ -56,7 +60,8 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void TryToOpenUnlockedDoor()
 		{
-			_door.Open().Assert_Success();
+			Act_Open()
+				.Assert_Success();
 
 			Assert_EventObserved(new DoorOpenedEvent());
 		}
@@ -64,7 +69,7 @@ namespace Kata.LockedDoor.Tests
 		[Fact]
 		public void UnlockUnlockedDoor()
 		{
-			_door.Unlock()
+			Act_Unlock()
 				.Assert_Failure(DoorError.DoorAlreadyUnlocked);
 		}
 	}
